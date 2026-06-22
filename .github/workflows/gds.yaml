@@ -4,6 +4,12 @@ on:
   push:
   workflow_dispatch:
 
+env:
+  PDK: gf180mcuD
+  PDK_ROOT: /home/runner/pdk
+  PDK_VERSION: 54435919abffb937387ec956209f9cf5fd2dfbee
+  AVALON_SCL_REF: c4648471c023690478e97c998edb6f2eac673298
+
 jobs:
   gds:
     runs-on: ubuntu-24.04
@@ -12,6 +18,21 @@ jobs:
         uses: actions/checkout@v6
         with:
           submodules: recursive
+
+      - name: Setup python for PDK overlay
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Install GF180 PDK for Avalon overlay
+        shell: bash
+        run: |
+          pip install ciel==2.2.0
+          ciel enable --pdk "$PDK" "$PDK_VERSION"
+
+      - name: Install Avalon 7T3V3 overlay
+        shell: bash
+        run: bash .github/scripts/install_avalon7t3v3_overlay.sh
 
       - name: Build GDS
         uses: TinyTapeout/tt-gds-action@ttgf26a
@@ -34,8 +55,85 @@ jobs:
         with:
           submodules: recursive
 
-      - name: GL test
-        uses: TinyTapeout/tt-gds-action/gl_test@ttgf26a
+      - name: Download GDS artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: tt_submission
+
+      - name: Set up environment variables
+        working-directory: tt_submission
+        shell: bash
+        run: |
+          PDK=$(jq -r '.PDK' pdk.json)
+          PDK_VERSION=$(jq -r '.PDK_VERSION' pdk.json)
+
+          cat << __EOF >> "$GITHUB_ENV"
+          PDK=$PDK
+          PDK_VERSION=$PDK_VERSION
+          AS_SCL_VERILOG=$PDK_ROOT/$PDK/libs.ref/gf180mcu_as_sc_mcu7t3v3/verilog/gf180mcu_as_sc_mcu7t3v3.v
+          __EOF
+
+      - name: Setup python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Install GF180 PDK
+        shell: bash
+        run: |
+          pip install ciel==2.2.0
+          ciel enable --pdk "$PDK" "$PDK_VERSION"
+
+      - name: Install Avalon 7T3V3 overlay
+        shell: bash
+        run: bash .github/scripts/install_avalon7t3v3_overlay.sh
+
+      - name: Install Python packages
+        if: ${{ hashFiles('test/requirements.txt') != '' }}
+        shell: bash
+        run: pip install -r test/requirements.txt
+
+      - name: Install cocotb
+        if: ${{ hashFiles('test/requirements.txt') == '' }}
+        shell: bash
+        run: pip install cocotb==1.8.0
+
+      - name: Install iverilog
+        shell: bash
+        run: |
+          wget https://github.com/TinyTapeout/iverilog/releases/download/v13.0/iverilog_13.0-1_amd64.deb
+          sudo apt-get update -y
+          sudo apt-get install -y ./iverilog_13.0-1_amd64.deb
+
+      - name: Run GL tests
+        shell: bash
+        run: |
+          cp tt_submission/*.v test/gate_level_netlist.v
+          cd test
+          rm -f tb.vcd tb.fst tb_rtl.fst tb_gl.fst results.xml
+          make clean
+          GATES=yes make
+          test -f results.xml
+          ! grep failure results.xml
+
+      - name: Upload Waveform and Test Results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: gatelevel_test_results
+          path: |
+            test/tb.vcd
+            test/tb.fst
+            test/tb_rtl.fst
+            test/tb_gl.fst
+            test/results.xml
+            test/output/*
+
+      - name: Test Summary
+        if: always()
+        uses: test-summary/action@v2.6
+        with:
+          paths: test/results.xml
 
   viewer:
     needs: gds
