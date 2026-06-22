@@ -36,7 +36,9 @@ The project config targets the AvalonSemiconductors
 ## UART protocol
 
 Default UART settings are 115200 baud, 8 data bits, no parity, 1 stop bit, with
-a 50 MHz `clk`.
+a 50 MHz `clk`. The UART bit divider is the top-level `BAUD_RELOAD` parameter;
+the default is `433`, which gives 434 clock cycles per bit at 50 MHz. For a
+different system clock, set `BAUD_RELOAD` to `round(clock_hz / baud) - 1`.
 
 Most commands are two bytes: command, then argument. They do not ACK, to avoid
 polluting the trace stream.

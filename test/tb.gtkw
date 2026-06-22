@@ -1,11 +1,12 @@
 [*]
 [*] GTKWave Analyzer save file for Detronyx UART Trace Exerciser
 [*]
-[dumpfile] "tb.fst"
+[dumpfile] "tb_rtl.fst"
 [savefile] "tb.gtkw"
-[timestart] 0
+[timestart] 900000000
 [size] 1400 900
 [pos] -1 -1
+*-18.000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb.
 [treeopen] tb.user_project.
 [treeopen] tb.user_project.u_core.
@@ -17,6 +18,8 @@
 tb.user_project.clk
 tb.user_project.rst_n
 tb.user_project.ena
+@22
+tb.tb_phase[7:0]
 @200
 -TinyTapeout pins
 @22

@@ -1,0 +1,39 @@
+[*]
+[*] GTKWave Analyzer save file for Detronyx UART Trace Exerciser gate-level simulation
+[*]
+[dumpfile] "tb_gl.fst"
+[savefile] "tb_gl.gtkw"
+[timestart] 900000000
+[size] 1400 760
+[pos] -1 -1
+*-18.000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb.
+[treeopen] tb.user_project.
+[sst_width] 320
+[signals_width] 280
+[sst_expanded] 1
+[sst_vpaned_height] 220
+@28
+tb.clk
+tb.rst_n
+tb.ena
+@22
+tb.tb_phase[7:0]
+@200
+-TinyTapeout pins
+@22
+tb.ui_in[7:0]
+tb.uo_out[7:0]
+tb.uio_in[7:0]
+tb.uio_out[7:0]
+tb.uio_oe[7:0]
+@200
+-Gate-level top ports
+@22
+tb.user_project.ui_in[7:0]
+tb.user_project.uo_out[7:0]
+tb.user_project.uio_in[7:0]
+tb.user_project.uio_out[7:0]
+tb.user_project.uio_oe[7:0]
+[pattern_trace] 1
+[pattern_trace] 0

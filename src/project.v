@@ -5,7 +5,10 @@
 
 `default_nettype none
 
-module tt_um_detronyx_uart_trace_exerciser (
+module tt_um_detronyx_uart_trace_exerciser #(
+    // Default: 50 MHz / 115200 baud - 1 = 433.027...
+    parameter [8:0] BAUD_RELOAD = 9'd433
+) (
     input  wire [7:0] ui_in,
     output wire [7:0] uo_out,
     input  wire [7:0] uio_in,
@@ -19,7 +22,9 @@ module tt_um_detronyx_uart_trace_exerciser (
   wire       uart_tx;
   wire [5:0] status;
 
-  detronyx_uart_trace_exerciser_core u_core (
+  detronyx_uart_trace_exerciser_core #(
+      .BAUD_RELOAD (BAUD_RELOAD)
+  ) u_core (
       .clk_i       (clk),
       .rst_ni      (rst_n),
       .ce_i        (ena),
@@ -37,7 +42,9 @@ module tt_um_detronyx_uart_trace_exerciser (
 
 endmodule
 
-module detronyx_uart_trace_exerciser_core (
+module detronyx_uart_trace_exerciser_core #(
+    parameter [8:0] BAUD_RELOAD = 9'd433
+) (
     input  wire       clk_i,
     input  wire       rst_ni,
     input  wire       ce_i,
@@ -71,7 +78,9 @@ module detronyx_uart_trace_exerciser_core (
   wire       tx_ready;
   wire       tx_busy;
 
-  detronyx_uart_rx u_uart_rx (
+  detronyx_uart_rx #(
+      .BAUD_RELOAD (BAUD_RELOAD)
+  ) u_uart_rx (
       .clk_i         (clk_i),
       .rst_ni        (rst_ni),
       .ce_i          (ce_i),
@@ -81,7 +90,9 @@ module detronyx_uart_trace_exerciser_core (
       .frame_error_o (rx_frame_error)
   );
 
-  detronyx_uart_tx u_uart_tx (
+  detronyx_uart_tx #(
+      .BAUD_RELOAD (BAUD_RELOAD)
+  ) u_uart_tx (
       .clk_i      (clk_i),
       .rst_ni     (rst_ni),
       .ce_i       (ce_i),
@@ -379,7 +390,9 @@ module detronyx_uart_trace_exerciser_core (
 
 endmodule
 
-module detronyx_uart_tx (
+module detronyx_uart_tx #(
+    parameter [8:0] BAUD_RELOAD = 9'd433
+) (
     input  wire        clk_i,
     input  wire        rst_ni,
     input  wire        ce_i,
@@ -389,8 +402,6 @@ module detronyx_uart_tx (
     output wire        tx_o,
     output wire        busy_o
 );
-
-  localparam [8:0] BAUD_RELOAD = 9'd433;  // 50 MHz / 115200 baud - 1
 
   reg [9:0]  shift_q;
   reg [8:0]  timer_q;
@@ -432,7 +443,9 @@ module detronyx_uart_tx (
 
 endmodule
 
-module detronyx_uart_rx (
+module detronyx_uart_rx #(
+    parameter [8:0] BAUD_RELOAD = 9'd433
+) (
     input  wire        clk_i,
     input  wire        rst_ni,
     input  wire        ce_i,
@@ -446,8 +459,7 @@ module detronyx_uart_rx (
   localparam [1:0] RX_START = 2'd1;
   localparam [1:0] RX_DATA  = 2'd2;
   localparam [1:0] RX_STOP  = 2'd3;
-  localparam [8:0] BAUD_RELOAD = 9'd433;       // 50 MHz / 115200 baud - 1
-  localparam [8:0] BAUD_HALF_RELOAD = 9'd216;  // half-bit sample delay
+  localparam [8:0] BAUD_HALF_RELOAD = BAUD_RELOAD >> 1;
 
   reg [1:0]  state_q;
   reg [8:0]  timer_q;

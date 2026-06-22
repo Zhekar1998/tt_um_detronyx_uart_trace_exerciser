@@ -20,3 +20,7 @@ VGA/CPU/MAC/TPU style projects:
 The implementation is pure digital RTL and the project config targets the
 AvalonSemiconductors `gf180mcu_as_sc_mcu7t3v3` native-3.3 V GF180 cell library.
 See [docs/info.md](docs/info.md) for the UART command map and packet format.
+
+The UART divider is the top-level `BAUD_RELOAD` parameter. The default value
+is `433`, matching 50 MHz / 115200 baud. For a different system clock, set
+`BAUD_RELOAD` at synthesis/simulation time to `round(clock_hz / baud) - 1`.

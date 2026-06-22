@@ -5,12 +5,20 @@
 SIM ?= icarus
 FST ?= -fst # Use more efficient FST format
 TOPLEVEL_LANG ?= verilog
+CLOCK_PERIOD_NS ?= 20
+UART_BAUD ?= 115200
+UART_BIT_CYCLES ?= 434
+DUT_BAUD_RELOAD ?= 433
 SRC_DIR = $(PWD)/../src
 PDK ?= gf180mcuD
 PDK_SIM_ROOT ?= $(abspath $(PWD)/../../../pdk_shim)
 AS_SCL_VERILOG ?= $(PDK_SIM_ROOT)/$(PDK)/libs.ref/gf180mcu_as_sc_mcu7t3v3/verilog/gf180mcu_as_sc_mcu7t3v3.v
 PROJECT_SOURCES = project.v
 COMPILE_ARGS += -g2012
+COMPILE_ARGS += -DDUT_BAUD_RELOAD=$(DUT_BAUD_RELOAD)
+export CLOCK_PERIOD_NS
+export UART_BAUD
+export UART_BIT_CYCLES
 
 ifneq ($(GATES),yes)
 

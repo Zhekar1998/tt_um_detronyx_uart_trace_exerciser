@@ -1,6 +1,10 @@
 `default_nettype none
 `timescale 1ns / 1ps
 
+`ifndef DUT_BAUD_RELOAD
+`define DUT_BAUD_RELOAD 433
+`endif
+
 /* This testbench just instantiates the module and makes some convenient wires
    that can be driven / tested by the cocotb test.py.
 */
@@ -8,7 +12,11 @@ module tb ();
 
   // Dump the signals to a FST file. You can view it with gtkwave or surfer.
   initial begin
-    $dumpfile("tb.fst");
+`ifdef GL_TEST
+    $dumpfile("tb_gl.fst");
+`else
+    $dumpfile("tb_rtl.fst");
+`endif
     $dumpvars(0, tb);
     #1;
   end
@@ -17,6 +25,7 @@ module tb ();
   reg clk;
   reg rst_n;
   reg ena;
+  reg [7:0] tb_phase;
   reg [7:0] ui_in;
   reg [7:0] uio_in;
   wire [7:0] uo_out;
@@ -27,7 +36,17 @@ module tb ();
   wire VGND = 1'b0;
 `endif
 
+  initial begin
+    tb_phase = 8'h00;
+  end
+
+`ifdef GL_TEST
   tt_um_detronyx_uart_trace_exerciser user_project (
+`else
+  tt_um_detronyx_uart_trace_exerciser #(
+      .BAUD_RELOAD(`DUT_BAUD_RELOAD)
+  ) user_project (
+`endif
 
       // Include power ports for the Gate Level test:
 `ifdef GL_TEST
