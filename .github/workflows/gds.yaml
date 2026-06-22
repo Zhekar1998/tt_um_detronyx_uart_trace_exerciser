@@ -151,7 +151,9 @@ jobs:
 
       - name: Cell usage summary
         shell: bash
-        run: ./tt/tt_tool.py --print-cell-category $TT_ARGS >> $GITHUB_STEP_SUMMARY
+        run: |
+          ./tt/tt_tool.py --print-cell-category $TT_ARGS >> "$GITHUB_STEP_SUMMARY" || \
+            echo "WARNING: cell usage summary is unavailable for this standard-cell library." >> "$GITHUB_STEP_SUMMARY"
 
       - name: Publish build logs
         if: success() || failure()
