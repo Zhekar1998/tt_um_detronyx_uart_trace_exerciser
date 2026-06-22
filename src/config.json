@@ -103,9 +103,14 @@
   "//": "Clock",
   "RUN_CTS": 1,
 
-  "//": "Avoid mirrored aoi211_2 placements that have triggered KLayout CO.6a in Avalon 7T3V3 experiments.",
+  "//": "Avoid Avalon 7T3V3 cells that are awkward in this local flow: 211 gates lack Verilog simulation models, dfxtp_4 lacks a model, and aoi211_2 has also caused mirrored-placement DRC.",
   "EXTRA_EXCLUDED_CELLS": [
-    "gf180mcu_as_sc_mcu7t3v3__aoi211_2"
+    "gf180mcu_as_sc_mcu7t3v3__ao211_2",
+    "gf180mcu_as_sc_mcu7t3v3__ao211_4",
+    "gf180mcu_as_sc_mcu7t3v3__aoi211_2",
+    "gf180mcu_as_sc_mcu7t3v3__aoi211_4",
+    "gf180mcu_as_sc_mcu7t3v3__dfxtp_4",
+    "gf180mcu_as_sc_mcu7t3v3__oai211_2"
   ],
 
   "//": "Don't generate power rings",
