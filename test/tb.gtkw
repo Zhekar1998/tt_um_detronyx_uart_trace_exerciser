@@ -1,0 +1,78 @@
+[*]
+[*] GTKWave Analyzer save file for Detronyx UART Trace Exerciser
+[*]
+[dumpfile] "tb.fst"
+[savefile] "tb.gtkw"
+[timestart] 0
+[size] 1400 900
+[pos] -1 -1
+[treeopen] tb.
+[treeopen] tb.user_project.
+[treeopen] tb.user_project.u_core.
+[sst_width] 320
+[signals_width] 280
+[sst_expanded] 1
+[sst_vpaned_height] 220
+@28
+tb.user_project.clk
+tb.user_project.rst_n
+tb.user_project.ena
+@200
+-TinyTapeout pins
+@22
+tb.user_project.ui_in[7:0]
+tb.user_project.uo_out[7:0]
+tb.user_project.uio_in[7:0]
+tb.user_project.uio_out[7:0]
+tb.user_project.uio_oe[7:0]
+@200
+-UART
+@28
+tb.user_project.uio_in[0]
+tb.user_project.uio_out[1]
+tb.user_project.u_core.u_uart_rx.state_q[1:0]
+tb.user_project.u_core.u_uart_rx.valid_o
+tb.user_project.u_core.u_uart_rx.data_o[7:0]
+tb.user_project.u_core.u_uart_tx.busy_q
+tb.user_project.u_core.u_uart_tx.shift_q[9:0]
+@200
+-Trace analyzer
+@28
+tb.user_project.u_core.armed_q
+tb.user_project.u_core.stream_q
+tb.user_project.u_core.sample_tick
+@22
+tb.user_project.u_core.trace_mask_q[7:0]
+tb.user_project.u_core.last_sample_q[7:0]
+tb.user_project.u_core.change_mask[7:0]
+tb.user_project.u_core.trace_sample_q[7:0]
+tb.user_project.u_core.trace_delta_q[7:0]
+tb.user_project.u_core.trace_change_q[7:0]
+@28
+tb.user_project.u_core.trace_pending_q
+tb.user_project.u_core.overflow_q
+tb.user_project.u_core.event_toggle_q
+@22
+tb.user_project.u_core.event_count_q[7:0]
+tb.user_project.u_core.drop_count_q[7:0]
+tb.user_project.u_core.delta_q[7:0]
+@200
+-Packetizer
+@28
+tb.user_project.u_core.pkt_active_q
+tb.user_project.u_core.status_pending_q
+tb.user_project.u_core.ping_pending_q
+@22
+tb.user_project.u_core.pkt_kind_q[1:0]
+tb.user_project.u_core.pkt_index_q[1:0]
+tb.user_project.u_core.pkt_byte_r[7:0]
+@200
+-Pattern generator
+@22
+tb.user_project.u_core.pattern_mode_q[2:0]
+tb.user_project.u_core.pattern_div_q[5:0]
+tb.user_project.u_core.pattern_cnt_q[5:0]
+tb.user_project.u_core.pattern_a_q[7:0]
+tb.user_project.u_core.pattern_out_q[7:0]
+[pattern_trace] 1
+[pattern_trace] 0
